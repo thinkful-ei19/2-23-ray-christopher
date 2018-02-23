@@ -16,24 +16,74 @@ const STORE = [
   {name: "bread", checked: false}
 ];
 
+function generateItemElement (item, itemIndex, template) {
+    //Creates a single li tag for each item.
+    return `
+    <li class="js-item-index-element" data-item-index="${itemIndex}">
+    <span class="shopping-item js-shopping-item ${item.checked ? "shopping-item__checked" : ''}">${item.name}</span>
+    <div class="shopping-item-controls">
+      <button class="shopping-item-toggle js-item-toggle">
+          <span class="button-label">check</span>
+      </button>
+      <button class="shopping-item-delete js-item-delete">
+          <span class="button-label">delete</span>
+      </button>
+    </div>
+    </li>`;
+}
+
+function generateShoppingItemsString(shoppingList) {
+    //This will create the entire HTML string to write onto the DOM.
+    console.log("Generating shopping list element");
+    const items = shoppingList.map((item, index) => generateItemElement(item, index));
+    return items.join("");
+}
 
 function renderShoppingList() {
   // this function will be repsonsible for rendering the shopping list in
   // the DOM
   console.log('`renderShoppingList` ran');
+  const shoppingListItemsString = generateShoppingItemsString(STORE);
+  $('.js-shopping-list').html(shoppingListItemsString);
+}
+
+function addItemToShoppingList(itemName) {
+    console.log(`Adding "${itemName}" to shopping list`);
+    STORE.push({name: itemName, checked: false});
 }
 
 
 function handleNewItemSubmit() {
   // this function will be responsible for when users add a new shopping list item
-  console.log('`handleNewItemSubmit` ran');
+  $('#js-shopping-list-form').submit(function(event) {
+    event.preventDefault();
+    const newItemName = $('.js-shopping-list-entry').val();
+    console.log(newItemName);
+    addItemToShoppingList(newItemName);
+    renderShoppingList();
+  });
 }
 
+function toggleCheckedForListItem(item Index) {
+    console.log("Toggling checked property for item and index " + itemIndex);
+    STORE[itemIndex].checked = !STORE[itemIndex].checked;
+}
+
+function getItemIndexFromElement(item) {
+    const itemIndexString = $(item).closest('.js-item-index-element').attr('data-item-index');
+    return parseInt(itemIndexString, 10);
+}
 
 function handleItemCheckClicked() {
   // this function will be reponsible for when users click the "check" button on
   // a shopping list item.
-  console.log('`handleItemCheckClicked` ran');
+  $('.js-shopping-list').on('click', `.js-item-toggle`, event => {
+    console.log('`handleItemCheckClicked` ran');
+    const itemIndex = getItemIndexFromElement(event.currentTarget);
+    console.log(itemIndex);
+    toggleCheckedForListItem(itemIndex);
+    renderShoppingList();
+  });
 }
 
 
