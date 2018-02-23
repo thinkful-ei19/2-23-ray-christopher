@@ -64,7 +64,7 @@ function handleNewItemSubmit() {
   });
 }
 
-function toggleCheckedForListItem(item Index) {
+function toggleCheckedForListItem(itemIndex) {
     console.log("Toggling checked property for item and index " + itemIndex);
     STORE[itemIndex].checked = !STORE[itemIndex].checked;
 }
@@ -102,7 +102,6 @@ function handleShoppingList() {
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
-
 }
 
 // when the page loads, call `handleShoppingList`
